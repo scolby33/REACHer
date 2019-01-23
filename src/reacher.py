@@ -15,7 +15,7 @@ REACH_URI = 'http://agathon.sista.arizona.edu:8080/odinweb/api/text'
 
 
 def download_pmid_xml(pmid: str) -> str:
-    """Retrieve the XML data record for the given PMID
+    """Retrieve the XML data record for the given PMID.
 
     (Due to the Entrez API, passing multiple IDs separated by commas in a single string
     will retrieve the records for all of the IDs.)
@@ -31,7 +31,7 @@ def download_pmid_xml(pmid: str) -> str:
 
 
 def extract_abstract(xml: str) -> Optional[str]:
-    """Extract all the abstract text from an Entrez XML data record
+    """Extract all the abstract text from an Entrez XML data record.
 
     :param xml: the XML data record as a string
 
@@ -51,7 +51,7 @@ def extract_abstract(xml: str) -> Optional[str]:
 
 
 def reach_extract(text: str) -> str:
-    """Provide text to Reach to be processed and return the JSON string of the results
+    """Provide text to Reach to be processed and return the JSON string of the results.
 
     :param text: the text string to be processed by Reach
 
@@ -64,7 +64,7 @@ def reach_extract(text: str) -> str:
 
 
 def print_reach_statistics(reach_result_json: str) -> None:
-    """Print statistics about the Reach result to stderr
+    """Print statistics about the Reach result to stderr.
 
     :param reach_result_json: the JSON **string** (not a Python mapping) of the Reach result to be analyzed
     """
@@ -83,17 +83,22 @@ def print_reach_statistics(reach_result_json: str) -> None:
 
 
 def main() -> Optional[int]:
+    """Main function for REACHer CLI."""  # noqa: D401
     assert len(sys.argv[1:]) == 1, 'provide a PMID as an argument'
     pmid = sys.argv[1]
 
     pmid_content = download_pmid_xml(pmid)
     abstract_text = extract_abstract(pmid_content)
-    reach_json = reach_extract(abstract_text)
+    if abstract_text:
+        reach_json = reach_extract(abstract_text)
 
-    print_reach_statistics(reach_json)
+        print_reach_statistics(reach_json)
 
-    with open(f'{pmid}.json', 'w') as f:
-        print(reach_json, file=f)
+        with open(f'{pmid}.json', 'w') as f:
+            print(reach_json, file=f)
+    else:
+        print('erorr: no abstract text extrated', file=sys.stderr)
+        return 1
 
 
 if __name__ == '__main__':
