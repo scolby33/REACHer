@@ -2,13 +2,13 @@
 
 Download an abstract from PubMed with its PMID, extract mentioned pathways with Reach, and save the output JSON.
 """
-from collections import Counter
 import json
 import sys
+from collections import Counter
 from typing import Optional
 
-from defusedxml.ElementTree import fromstring
 import requests
+from defusedxml.ElementTree import fromstring
 
 BASE_PUBMED_URI = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={PMID}&retmode=xml'
 REACH_URI = 'http://agathon.sista.arizona.edu:8080/odinweb/api/text'
