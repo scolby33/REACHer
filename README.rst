@@ -16,12 +16,19 @@ REACHer supports only Python 3.7 or later.
 
 Usage
 -----
-REACHer is a simple program: call it with a PubMed ID and a JSON file will appear in your working directory:
+REACHer is a simple program: call it with a PubMed ID and a JSON file of Reach results will appear in your working directory.
+Basic statistics about the Reach results are printed to stderr.
 
 .. code-block:: sh
 
     $ ls
     $ reacher 28546431
+    events extracted: 7
+    number of events of each type:
+      'regulation': 2
+      'amount': 2
+      'protein-modification': 1
+      'activation': 2
     $ ls
     28546431.json
     $ head 28546431.json

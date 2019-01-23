@@ -2,6 +2,8 @@
 
 Download an abstract from PubMed with its PMID, extract mentioned pathways with Reach, and save the output JSON.
 """
+from collections import Counter
+import json
 import sys
 from typing import Optional
 
@@ -59,6 +61,25 @@ def reach_extract(text: str) -> str:
     return resp.text
 
 
+def print_reach_statistics(reach_result_json: str) -> None:
+    """Print statistics about the Reach result to stderr
+
+    :param reach_result_json: the JSON **string** (not a Python mapping) of the Reach result to be analyzed
+    """
+    reach_json = json.loads(reach_result_json)
+
+    # use get and empty containers as defaults to allow chaining without error checking
+    frames = reach_json.get('events', {}).get('frames', [])
+
+    num_events = len(frames)
+    print(f'events extracted: {num_events}', file=sys.stderr)
+
+    types_count = Counter(frame['type'] for frame in frames)
+    print('number of events of each type:', file=sys.stderr)
+    for type_, count in types_count.items():
+        print(f"  '{type_}': {count}", file=sys.stderr)
+
+
 def main() -> Optional[int]:
     assert len(sys.argv[1:]) == 1, 'provide a PMID as an argument'
     pmid = sys.argv[1]
@@ -66,6 +87,8 @@ def main() -> Optional[int]:
     pmid_content = download_pmid_xml(pmid)
     abstract_text = extract_abstract(pmid_content)
     reach_json = reach_extract(abstract_text)
+
+    print_reach_statistics(reach_json)
 
     with open(f'{pmid}.json', 'w') as f:
         print(reach_json, file=f)
