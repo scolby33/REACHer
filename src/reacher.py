@@ -40,7 +40,9 @@ def extract_abstract(xml: str) -> Optional[str]:
     root = fromstring(xml)
 
     abstract_texts = []
-    for abstract_element in root.findall('./PubmedArticle/MedlineCitation/Article/Abstract/AbstractText'):
+    for abstract_element in root.findall(
+        './PubmedArticle/MedlineCitation/Article/Abstract/AbstractText'
+    ):
         abstract_texts.append(''.join(abstract_element.itertext()))
 
     concatenated_abstracts = '\n'.join(abstract_texts)
