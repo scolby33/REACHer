@@ -1,3 +1,6 @@
-include *.rst
-recursive-include tests *.py
+include .flake8
 include tox.ini
+
+include *.rst
+
+recursive-include tests *.py
