@@ -21,6 +21,7 @@ def download_pmid_xml(pmid: str) -> str:
     :param pmid: the PubMed ID of the record to be retrieved
 
     :returns: the XML data record as a string
+    :raises requests.exceptions.HTTPError: on an error response from the web service
     """
     resp = requests.get(BASE_PUBMED_URI.format(PMID=pmid))
     resp.raise_for_status()
@@ -51,6 +52,7 @@ def reach_extract(text: str) -> str:
     :param text: the text string to be processed by Reach
 
     :returns: the resulting Reach JSON ('fries' output format) as a string
+    :raises requests.exceptions.HTTPError: on an error response from the web service
     """
     resp = requests.post(REACH_URI, data={'text': text, 'output': 'fries'})
     resp.raise_for_status()
